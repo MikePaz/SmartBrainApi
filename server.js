@@ -1,9 +1,11 @@
 const express = require('express');
 const bodyParser = require('body-parser')
+const cors = require('cors')
 
 
 const app = express();
 app.use(bodyParser.json())
+app.use(cors());
 
 
 app.get('/' , (req , res)=>{
@@ -30,12 +32,20 @@ const database = {
         {
             id:'1234',
             name:'sally',
-            email:'sally@gmail.com',
             password:'banana',
             entries:0,
             joined:new Date()
         }
+    ],
+        login:[ 
+        {
+            id:987,
+            hash:'',
+            email:'john@gmail.com'
+        }
+
     ]
+    
 }
 
 app.get('/profile/:id' ,(req,res)=>{
@@ -94,4 +104,3 @@ app.put('/image' ,(req,res)=>{
         }
     })
 })
-
