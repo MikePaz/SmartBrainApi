@@ -1,7 +1,16 @@
 const express = require('express');
-const bodyParser = require('body-parser')
-const cors = require('cors')
-
+const bodyParser = require('body-parser');
+const bcrypt = require('bcrypt-nodejs');
+const cors = require('cors');
+const knex = require('knex')({
+    client: 'pg',
+    connection: {
+      host : '127.0.0.1',
+      user : 'postgres',
+      password : 'root',
+      database : 'SmartBrain'
+    }
+  });
 
 const app = express();
 app.use(bodyParser.json())
@@ -15,38 +24,6 @@ app.get('/' , (req , res)=>{
 app.listen(3000,()=>{
     console.log('app is running on port 3000')
 })
-
-
-
-const database = {
-    users:[
-        {
-            id:'123',
-            name:'john',
-            email:'john@gmail.com',
-            password:'cookies',
-            entries:0,
-            joined:new Date()
-        } ,
-
-        {
-            id:'1234',
-            name:'sally',
-            password:'banana',
-            entries:0,
-            joined:new Date()
-        }
-    ],
-        login:[ 
-        {
-            id:987,
-            hash:'',
-            email:'john@gmail.com'
-        }
-
-    ]
-    
-}
 
 app.get('/profile/:id' ,(req,res)=>{
     const { id } = req.params;
@@ -75,16 +52,18 @@ app.post('/signin',(req , res)=>{
 })
 
 app.post('/register' , (req,res) =>{
-    const {email,name} = req.body
-    database.users.push({
-        id:'125',
-        name:name,
+    const {email,name,password} = req.body
+    knex('users')
+    .returning('*')
+    .insert({
         email:email,
-        entries:0,
-        joined:new Date()
-    })
+        name:name,
+        joined: new Date()
+    }).then(user =>{
+        res.json(user[0])
+    }).catch(err=>res.status(400).json(err))
 
-    res.json(database.users[database.users.length -1])
+    
 })
 
 app.put('/image' ,(req,res)=>{
