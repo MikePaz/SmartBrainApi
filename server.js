@@ -33,3 +33,5 @@ app.get('/profile/:id' ,(req , res) => {profile.handleProfileGet(req,res,knex)})
 app.post('/signin',(req,res)=>{signin.handleSignin(req,res,knex,bcrypt)})
 app.post('/register' , (req , res) => {register.handleRegister(req,res,knex,bcrypt)} )
 app.put('/image' ,(req,res) => {Image.imageHandler(req , res , knex)})
+app.post('/imageurl' ,(req,res) => {Image.handleApiCall(req , res )})
+
